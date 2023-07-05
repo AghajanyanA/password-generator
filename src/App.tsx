@@ -17,7 +17,7 @@ function App() {
   const [password, setPassword] = useState<string>('')
 
   const handleLength = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (isFinite(+e.target.value) && +e.target.value <= 16 && +e.target.value >= 0) {
+    if (isFinite(+e.target.value) && +e.target.value <= 160 && +e.target.value >= 0) {
       setPassLength(+e.target.value)
     }
   }
@@ -28,16 +28,28 @@ function App() {
       const numbers = '0123456789'
       const letters = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm'
       const symbols = ';\'\\:.<>,?/}{[]+=_-)(*&^%$#@!~`|"'
-      let passwordBase = ''
-        
+      const concatedPassword = (setups.letters ? letters : '') + (setups.numbers ? numbers : '') + (setups.symbols ? symbols : '');
+      setPassword(getRandomizedPassword(concatedPassword))
     }
+    else {
+      alert(false)
+    }
+  }
+
+  const getRandomizedPassword = (pass: string) => {
+    let finalPassword = ''
+    for (let i = 0; i < passLength; i++) {
+      finalPassword += pass[getRandomNumber(0, pass.length - 1)]
+    }
+    return finalPassword
+
+  }
+  const getRandomNumber = (min:number, max:number) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   return (
     <div className="App">
-      <div className="result">
-
-      </div>
       <div className="setups">
         <h3>I need a <input type="text" value={passLength} onChange={handleLength} /> long password</h3>
         <form>
@@ -56,6 +68,12 @@ function App() {
         </form>
       </div>
       <button onClick={handleGenerateButton}>Generate!</button>
+
+
+      <div className="result">
+
+      {password}
+      </div>
     </div>
   );
 }
